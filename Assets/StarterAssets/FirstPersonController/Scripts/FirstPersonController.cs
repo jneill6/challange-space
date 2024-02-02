@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+
 #endif
 
 namespace StarterAssets
@@ -130,7 +132,14 @@ namespace StarterAssets
 			{
 				_canJump = true;
 			}
-        }
+
+			if (other.gameObject.tag == "Floor")
+            {
+				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+			}
+		}
+
+
 
         private void GroundedCheck()
 		{

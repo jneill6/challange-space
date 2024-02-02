@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CinemachineTarget
   - PowerUp
+  - Floor
   layers:
   - Default
   - TransparentFX
