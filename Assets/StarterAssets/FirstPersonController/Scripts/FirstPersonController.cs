@@ -26,6 +26,7 @@ namespace StarterAssets
 		public float JumpHeight = 1.2f;
 		[Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
 		public float Gravity = -15.0f;
+		private bool _canJump = false;
 
 		[Space(10)]
 		[Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
@@ -88,6 +89,7 @@ namespace StarterAssets
 
 		private void Awake()
 		{
+			_canJump = false;	
 			// get a reference to our main camera
 			if (_mainCamera == null)
 			{
@@ -112,8 +114,8 @@ namespace StarterAssets
 
 		private void Update()
 		{
-			JumpAndGravity();
-			GroundedCheck();
+            JumpAndGravity();
+            GroundedCheck();
 			Move();
 		}
 
@@ -122,7 +124,15 @@ namespace StarterAssets
 			CameraRotation();
 		}
 
-		private void GroundedCheck()
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.tag == "PowerUp")
+			{
+				_canJump = true;
+			}
+        }
+
+        private void GroundedCheck()
 		{
 			// set sphere position, with offset
 			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
@@ -212,8 +222,9 @@ namespace StarterAssets
 				}
 
 				// Jump
-				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
-				{
+				if (_input.jump && _jumpTimeoutDelta <= 0.0f && _canJump)
+
+                {
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 				}
