@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 #endif
@@ -77,6 +78,11 @@ namespace StarterAssets
 
 		private const float _threshold = 0.01f;
 
+		private Vector3 checkpoint;
+
+		public Text Score;
+		private int _score;
+
 		private bool IsCurrentDeviceMouse
 		{
 			get
@@ -91,6 +97,8 @@ namespace StarterAssets
 
 		private void Awake()
 		{
+			checkpoint = transform.position;
+
 			_canJump = false;	
 			// get a reference to our main camera
 			if (_mainCamera == null)
@@ -112,6 +120,8 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
+
+			//Score = _score.ToString();
 		}
 
 		private void Update()
@@ -135,7 +145,15 @@ namespace StarterAssets
 
 			if (other.gameObject.tag == "Floor")
             {
-				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+				this.GetComponent<CharacterController>().enabled = false;
+				transform.position = checkpoint;
+				this.GetComponent<CharacterController>().enabled = true;
+
+			}
+
+			if (other.gameObject.tag == "Checkpoint")
+			{
+				checkpoint = other.transform.position;
 			}
 		}
 
