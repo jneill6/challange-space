@@ -2,6 +2,7 @@
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.SceneManagement;
 
 #endif
@@ -80,8 +81,12 @@ namespace StarterAssets
 
 		private Vector3 checkpoint;
 
+		private int CoinScore = 50;
+
 		public Text Score;
 		private int _score;
+
+		public AudioSource CoinCollect;
 
 		private bool IsCurrentDeviceMouse
 		{
@@ -121,7 +126,6 @@ namespace StarterAssets
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
 
-			//Score = _score.ToString();
 		}
 
 		private void Update()
@@ -129,9 +133,12 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
 			Move();
-		}
 
-		private void LateUpdate()
+            Score.text = _score.ToString();
+
+        }
+
+        private void LateUpdate()
 		{
 			CameraRotation();
 		}
@@ -149,11 +156,20 @@ namespace StarterAssets
 				transform.position = checkpoint;
 				this.GetComponent<CharacterController>().enabled = true;
 
+				_score -= 1; 
+
 			}
 
 			if (other.gameObject.tag == "Checkpoint")
 			{
 				checkpoint = other.transform.position;
+			}
+
+			if (other.gameObject.tag == "Coin")
+			{
+				_score += CoinScore;
+				CoinCollect.Play();
+				Destroy(other.gameObject);
 			}
 		}
 
