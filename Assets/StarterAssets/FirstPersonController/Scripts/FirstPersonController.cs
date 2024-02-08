@@ -148,6 +148,7 @@ namespace StarterAssets
             if (other.gameObject.tag == "PowerUp")
 			{
 				_canJump = true;
+				Destroy(other.gameObject);
 			}
 
 			if (other.gameObject.tag == "Floor")
